@@ -1,7 +1,7 @@
-// pages/signup.tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
-import {getData, postData} from "../services/api";
+import {postData} from "../services/api";
+import Cookie from "js-cookie";
 
 interface SignupData {
   name: string;
@@ -50,13 +50,11 @@ const SignupPage = () => {
       console.log(response);
       if (!response.ok) {
         throw new Error("Erro ao criar conta");
-      }
+      };
 
-      const data = await response.json();
-      console.log("Cadastro bem-sucedido:", data);
-
-      // Redirecionar após cadastro
-      router.push("/login"); // Redireciona para a página de login após o cadastro
+      let token = response.token;
+      Cookie.set("auth_token", token);
+      router.push("/dashboard");
 
     } catch (error) {
       setError("Erro ao tentar criar a conta. Tente novamente.");
