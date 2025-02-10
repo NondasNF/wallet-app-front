@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
+import Navbar from "@/components/Navbar";
+import Wallet from "@/components/Wallet";
+import DepositModal from "@/components/DepositModal";
+import TransferModal from "@/components/TransferModal";
 import { getData, postData } from "@/services/api";
 
 interface WalletData {
@@ -124,123 +128,44 @@ const DashboardPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-100">
-      <nav className="bg-blue-600 p-4 text-white flex justify-between items-center">
-        <div className="text-xl">Dashboard</div>
-        <div>
+      <Navbar onLogout={handleLogout} />
+      <div className="flex flex-col justify-center items-center flex-grow p-8">
+        <Wallet walletData={walletData} loading={loading} error={error} />
+        <div className="mt-6 flex gap-4">
           <button
-            onClick={() => router.push("/account")}
-            className="bg-blue-500 px-4 py-2 rounded-md mr-4 hover:bg-blue-700"
+            onClick={() => setModalOpen("deposit")}
+            className={`bg-green-500 text-white px-4 py-2 rounded-md ${!walletData?.is_active || walletData?.balance === "0.00" ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-green-600'}`}
+            disabled={walletData?.balance === "0"}
           >
-            Minha Conta
+            Fazer Depósito
           </button>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </div>
-      </nav>
-
-      <div className="flex justify-center items-center flex-grow p-8">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-          <h2 className="text-2xl font-bold text-center mb-4">Minha Carteira</h2>
-
-          {loading ? (
-            <p>Carregando...</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : walletData ? (
-            <div>
-              <p><strong>Endereço:</strong> {walletData.id}</p>
-              <p><strong>Saldo:</strong> R${parseFloat(walletData.balance).toFixed(2)}</p>
-              <p><strong>Status:</strong> {walletData.is_active ? "Ativo" : "Inativo"}</p>
-            </div>
-          ) : (
-            <p>Nenhum dado encontrado.</p>
-          )}
-
-          <div className="mt-6 flex justify-between">
-            <button
-              onClick={() => setModalOpen("deposit")}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-            >
-              Fazer Depósito
-            </button>
-            <button
+              <button
               onClick={() => setModalOpen("transfer")}
-              className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ${!walletData?.is_active || walletData?.balance == "0.00" ? "opacity-50 cursor-not-allowed" : ""}`}
-              disabled={!walletData?.is_active || walletData?.balance == "0.00" }
-            >
+              className={`px-4 py-2 rounded-md text-white ${!walletData?.is_active || walletData?.balance === "0" ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+              disabled={!walletData?.is_active || walletData?.balance === "0.00"}
+              >
               Fazer Transferência
-            </button>
-          </div>
+              </button>
         </div>
       </div>
-      {modalOpen === "deposit" && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h3 className="text-lg font-bold mb-4">Fazer Depósito</h3>
-            <div>
-              <input
-                type="number"
-                value={depositAmount}
-                onChange={(e) => setDepositAmount(e.target.value)}
-                placeholder="Valor"
-                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-              />
-              <p className="mb-4 text-gray-500">A ferramenta de depósito real ainda precisa ser implementada.</p>
-              <button
-                onClick={handleDeposit}
-                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-              >
-                Confirmar Depósito
-              </button>
-              <button
-                onClick={() => setModalOpen(null)}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-4"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {modalOpen === "transfer" && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-90">
-            <h3 className="text-lg font-bold mb-4">Fazer Transferência</h3>
-            <div>
-              <input
-                type="number"
-                value={transferAmount}
-                onChange={(e) => setTransferAmount(e.target.value)}
-                placeholder="Quantidade"
-                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-              />
-              <input
-                type="number"
-                value={destinationWalletId}
-                onChange={(e) => setDestinationWalletId(e.target.value)}
-                placeholder="ID da carteira destino"
-                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-              />
-              <button
-                onClick={handleTransfer}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Confirmar Transferência
-              </button>
-              <button
-                onClick={() => setModalOpen(null)}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-4"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+      <DepositModal
+        isOpen={modalOpen === "deposit"}
+        onClose={() => setModalOpen(null)}
+        depositAmount={depositAmount}
+        setDepositAmount={setDepositAmount}
+        handleDeposit={handleDeposit}
+      />
+      
+      <TransferModal
+        isOpen={modalOpen === "transfer"}
+        onClose={() => setModalOpen(null)}
+        transferAmount={transferAmount}
+        setTransferAmount={setTransferAmount}
+        destinationWalletId={destinationWalletId}
+        setDestinationWalletId={setDestinationWalletId}
+        handleTransfer={handleTransfer}
+      />
     </div>
   );
 };
