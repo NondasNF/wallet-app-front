@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Wallet from "@/components/Wallet";
 import DepositModal from "@/components/DepositModal";
 import TransferModal from "@/components/TransferModal";
+import TransactionHistory from "@/components/TransactionHistory";
 import { getData, postData } from "@/services/api";
 
 interface WalletData {
@@ -67,7 +68,7 @@ const DashboardPage = () => {
 
     try {
       const response = await postData(
-        "api/user/transation/deposit",
+        "api/user/transaction/deposit",
         {
           amount: depositAmount,
         },
@@ -94,7 +95,7 @@ const DashboardPage = () => {
 
     try {
       const response = await postData(
-        "api/user/transation/transfer",
+        "api/user/transaction/transfer",
         {
           wallet_id: destinationWalletId,
           amount: transferAmount,
@@ -134,19 +135,20 @@ const DashboardPage = () => {
         <div className="mt-6 flex gap-4">
           <button
             onClick={() => setModalOpen("deposit")}
-            className={`bg-green-500 text-white px-4 py-2 rounded-md ${!walletData?.is_active || walletData?.balance === "0.00" ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-green-600'}`}
-            disabled={walletData?.balance === "0"}
+            className={`bg-green-500 text-white px-4 py-2 rounded-md ${!walletData?.is_active ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-green-600'}`}
+            disabled={!walletData?.is_active}
           >
             Fazer Depósito
           </button>
               <button
               onClick={() => setModalOpen("transfer")}
-              className={`px-4 py-2 rounded-md text-white ${!walletData?.is_active || walletData?.balance === "0" ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+              className={`px-4 py-2 rounded-md text-white ${!walletData?.is_active || walletData?.balance === "0.00" ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
               disabled={!walletData?.is_active || walletData?.balance === "0.00"}
               >
               Fazer Transferência
               </button>
         </div>
+        <TransactionHistory initialPage={1} currentUserId={walletData?.user_id} />
       </div>
 
       <DepositModal
