@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Carteira Financeira
 
-## Getting Started
+## 📌 Descrição
+Este projeto é o frontend de uma aplicação de **Carteira Financeira**, desenvolvido em **Next.js** e **Tailwind CSS**. Ele permite que usuários realizem login, cadastrem-se, façam depósitos, transfiram saldo e visualizem suas transações.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Tecnologias Utilizadas
+- **Next.js** (React)
+- **Tailwind CSS** (Estilização)
+- **React Query** (Gerenciamento de estado assíncrono)
+- **Fetch API** (Consumo da API)
+- **JWT** (Autenticação com Bearer Token)
+
+---
+
+## 📂 Estrutura do Projeto
+```
+frontend/
+│── public/
+│── src/
+│   ├── components/...
+│   ├── pages/
+│   │   ├── my-account/index.tsx
+│   │   ├── login.tsx
+│   │   ├── signup.tsx
+│   │   ├── dashboard.tsx
+│   ├── services/
+│   ├── utils/
+│── .env.local
+│── package.json
+│── tailwind.config.js
+│── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔧 Instalação e Configuração
+### **1. Clone o repositório**
+```bash
+git clone https://github.com/NondasNF/wallet-app-front.git
+cd wallet-app-front
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **2. Instalar dependências**
+```bash
+npm install
+```
 
-## Learn More
+### **3. Configurar variáveis de ambiente**
+Crie um arquivo `.env.local` e adicione:
+```
+WALLET_APP_URL=http://localhost:7000/api
+```
 
-To learn more about Next.js, take a look at the following resources:
+### **4. Rodar o servidor de desenvolvimento**
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O projeto será iniciado em **http://localhost:3000**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔑 Autenticação
+A aplicação utiliza **JWT (Bearer Token)**. O token é armazenado em **cookie** e adicionado automaticamente às requisições protegidas.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📌 Funcionalidades
+### **Registro de Usuário**
+- Rota: `/register`
+- Envia os dados para a API e recebe um token de autenticação.
+
+### **Login de Usuário**
+- Rota: `/login`
+- Após autenticação bem-sucedida, o token é salvo no localStorage.
+
+### **Dashboard**
+- Rota: `/dashboard`
+- Exibe saldo e ações rápidas para depósito e transferência.
+
+### **Minha Conta**
+- Rota: `/my-account`
+- Exibe informações do usuário e possibilidade de desativar a carteira.
+
+---
+
+## 📦 Build e Deploy
+### **Gerar build otimizada**
+```bash
+npm run build
+```
+
+### **Executar a versão otimizada**
+```bash
+npm run start
+```
+
+---
+
+## 📬 Contato
+Caso tenha dúvidas ou sugestões, entre em contato via [seuemail@example.com](mailto:seuemail@example.com).
+
