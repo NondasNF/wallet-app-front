@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getData } from "@/services/api";
+import { getData, putData } from "@/services/api";
+import { useRouter } from "next/router";
 import Cookie from "js-cookie";
 
 interface Transaction {
@@ -30,6 +31,7 @@ const TransactionHistory = ({ initialPage, currentUserId }: TransactionHistoryPr
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTransactions = async (page: number) => {
@@ -68,29 +70,17 @@ const TransactionHistory = ({ initialPage, currentUserId }: TransactionHistoryPr
   const handleCancelTransaction = async (transactionId: number) => {
     try {
       const token = Cookie.get("auth_token");
-      const response = await fetch(`api/user/transaction/cancel/${transactionId}`, {
-        method: "PUT",
-        headers: {
+      const response = await putData(`api/user/transaction/cancel/${transactionId}`,{},
+        {
           Authorization: `Bearer ${token}`,
-        },
-      });
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao cancelar transação");
       }
 
-      const updatedTransactions = transactions.map((transaction) => {
-        if (transaction.id === transactionId) {
-          return {
-            ...transaction,
-            type: "cancelled",
-          };
-        }
-
-        return transaction;
-      });
-
-      setTransactions(updatedTransactions);
+      router.reload();
     } catch (error) {
       console.error(error);
     }
