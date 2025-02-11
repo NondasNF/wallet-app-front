@@ -25,6 +25,7 @@ const TransferModal = ({
       <div className="bg-white p-6 rounded-lg shadow-lg w-90">
         <h3 className="text-lg font-bold mb-4">Fazer Transferência</h3>
         <div>
+          <label className="block text-gray-700">Valor:</label>
           <input
             type="number"
             value={transferAmount}
@@ -32,6 +33,7 @@ const TransferModal = ({
             placeholder="Quantidade"
             className="w-full p-2 mb-4 border border-gray-300 rounded-md"
           />
+          <label className="block text-gray-700">ID da carteira destino:</label>
           <input
             type="number"
             value={destinationWalletId}

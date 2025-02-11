@@ -12,7 +12,7 @@ const Navbar = ({ onLogout }: NavbarProps) => {
       <div className="text-xl">Dashboard</div>
       <div>
         <button
-          onClick={() => router.push("/account")}
+          onClick={() => router.push("/my-account")}
           className="bg-blue-500 px-4 py-2 rounded-md mr-4 hover:bg-blue-700"
         >
           Minha Conta
