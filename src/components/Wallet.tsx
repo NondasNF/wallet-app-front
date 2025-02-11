@@ -1,13 +1,14 @@
-interface WalletData {
-  id: number;
-  balance: string;
-  is_active: number;
-}
-
 interface WalletProps {
   walletData: WalletData | null;
   loading: boolean;
   error: string | null;
+}
+
+interface WalletData {
+  id: number;
+  user_id: number;
+  balance: number;
+  is_active: number;
 }
 
 const Wallet = ({ walletData, loading, error }: WalletProps) => {
@@ -22,7 +23,7 @@ const Wallet = ({ walletData, loading, error }: WalletProps) => {
       ) : walletData ? (
         <div>
           <p><strong>Endereço:</strong> {walletData.id}</p>
-          <p><strong>Saldo:</strong> R${parseFloat(walletData.balance).toFixed(2)}</p>
+          <p><strong>Saldo:</strong> R${walletData.balance}</p>
           <p><strong>Status:</strong> {walletData.is_active ? "Ativo" : "Inativo"}</p>
         </div>
       ) : (
