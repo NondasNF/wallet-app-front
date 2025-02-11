@@ -12,7 +12,7 @@ import { getData, postData } from "@/services/api";
 interface WalletData {
   id: number;
   user_id: number;
-  balance: string;
+  balance: number;
   is_active: number;
 }
 
@@ -83,7 +83,7 @@ const DashboardPage = () => {
 
       setModalOpen(null);
       alert(`Depósito bem-sucedido! Novo saldo: R$ ${response.balance}`);
-      setWalletData(walletData ? { ...walletData, balance: response.balance } : null);
+      setWalletData(walletData ? { ...walletData, balance: parseFloat(response.balance) } : null);
       setDepositAmount("");
     } catch (error) {
       alert("Erro ao tentar fazer depósito.");
@@ -142,13 +142,13 @@ const DashboardPage = () => {
           </button>
               <button
               onClick={() => setModalOpen("transfer")}
-              className={`px-4 py-2 rounded-md text-white ${!walletData?.is_active || walletData?.balance === "0.00" ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
-              disabled={!walletData?.is_active || walletData?.balance === "0.00"}
+              className={`px-4 py-2 rounded-md text-white ${!walletData?.is_active || walletData?.balance <= 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+              disabled={!walletData?.is_active || walletData?.balance <= 0}
               >
               Fazer Transferência
               </button>
         </div>
-        <TransactionHistory initialPage={1} currentUserId={walletData?.user_id} />
+        <TransactionHistory initialPage={1} currentUserId={walletData?.user_id ?? 0} />
       </div>
 
       <DepositModal
