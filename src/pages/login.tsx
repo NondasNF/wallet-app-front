@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { postData } from "@/services/api";
 import Cookie from "js-cookie";
@@ -19,6 +19,14 @@ const LoginPage = () => {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const token = Cookie.get("auth_token");
+      if (token) {
+        router.push("/dashboard");
+        return;
+      }
+    }, [router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -32,12 +40,6 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const token = Cookie.get("auth_token");
-      if (token) {
-        router.push("/dashboard");
-        return;
-      }
-
       const response = await postData("api/login", formData);
 
       if (!response.ok) {
