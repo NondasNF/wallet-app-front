@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { postData } from "@/services/api";
+import Cookie from "js-cookie";
 import '../styles/globals.css';
 
 interface LoginData {
@@ -30,27 +32,24 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const token = Cookie.get("auth_token");
+      if (token) {
+        router.push("/dashboard");
+        return;
+      }
+
+      const response = await postData("api/login", formData);
 
       if (!response.ok) {
         throw new Error("Falha na autenticação");
       }
-
-      // Supondo que a API retorne um token de autenticação ou outro tipo de sucesso
-      const data = await response.json();
-      console.log("Login bem-sucedido:", data);
-
-      // Redirecionar após login
-      router.push("/dashboard"); // ou qualquer rota que você queira redirecionar
-
+      
+      Cookie.set("auth_token", response.token);
+      router.push("/dashboard");
     } catch (error) {
-      setError("Erro ao tentar fazer login. Tente novamente.");
+      if (error === "Não autorizado") {
+        setError("E-mail ou senha incorretos");
+      }
       console.error(error);
     } finally {
       setLoading(false);
