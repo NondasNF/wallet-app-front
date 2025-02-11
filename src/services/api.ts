@@ -1,4 +1,4 @@
-const API_URL = process.env.WALLET_APP_URL || 'http://127.0.0.1:7000';
+const API_URL = process.env.WALLET_APP_API_URL || 'http://127.0.0.1:7000';
 
 export async function getData(endpoint: string, headers: HeadersInit = {}) {
   const response = await fetch(`${API_URL}/${endpoint}`, {
